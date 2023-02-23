@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  postgres-db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "4800:5432"
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      - ./remote/initdb-greenlight.sh:/docker-entrypoint-initdb.d/initdb-greenlight.sh
+      - greenlight-api-pgdata:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    networks:
+      - greenlight-api-network
+
+volumes:
+  greenlight-api-pgdata:
+    driver: local
+
+networks:
+  greenlight-api-network:
+      name: greenlight-api-network
