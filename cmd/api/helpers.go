@@ -51,9 +51,9 @@ func (app *application) writeJSON(w http.ResponseWriter, status int, data envelo
 }
 
 func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
-	MAX_BYTES := 1_048_576 // 1MB
+	const MaxBytes = 1_048_576 // 1MB
 
-	r.Body = http.MaxBytesReader(w, r.Body, int64(MAX_BYTES))
+	r.Body = http.MaxBytesReader(w, r.Body, int64(MaxBytes))
 	dec := json.NewDecoder(r.Body)
 	dec.DisallowUnknownFields()
 
@@ -86,7 +86,7 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst int
 			return fmt.Errorf("body contains unknown key %s", fieldName)
 
 		case err.Error() == "http: request body too large":
-			return fmt.Errorf("body must not be larger than %d bytes", MAX_BYTES)
+			return fmt.Errorf("body must not be larger than %d bytes", MaxBytes)
 
 		case errors.As(err, &invalidUnmarshalError):
 			panic(err)
